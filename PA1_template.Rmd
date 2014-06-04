@@ -13,9 +13,8 @@ data subset without NA values (may not need it due to the above)
 subsetData <- subset(data, !is.na(data$steps)) ; head(subsetData)
 ```
 
-## What is mean total number of steps taken per day?
+Summarise the data by the sum, mean and median of the number of steps measured on each day:  
 
-get the mean of the data
 ```{r summary.ststs,echo=TRUE}
 summary.stats <- ddply(data, .(date), summarize,
                 sum.steps = sum(steps, na.rm = T),
@@ -23,12 +22,16 @@ summary.stats <- ddply(data, .(date), summarize,
                 median.steps = median(steps, na.rm = T)
             )
 ```
-Histogram:
+
+## What is mean total number of steps taken per day?
+
+
+Histogram of the total number of steps measured per day:
 ```{r getMeanAndMedian, echo = TRUE}
 
 hist(summary.stats$sum.steps, 
-     main="Histogram of number of steps per day",
-     xlab="Number of steps in a day",
+     main="Histogram: Total number of steps per day",
+     xlab="Total number of steps in a day",
      ylab="Frequency (number of days)")
 
 meanSteps <- mean(subsetData$steps)
@@ -39,18 +42,16 @@ medianSteps <- median(subsetData$steps)
 The _mean_ number of steps is: **`r meanSteps`**.
 The _median_ number of steps is: **`r medianSteps`**.
 
-**Note: the section above needs to be repeated**
-
-
-
 
 ## What is the average daily activity pattern?
 
+plot(summary$date, summary$mean.steps)
 
+or are we supposed to split the data by interval?
 
 ## Imputing missing values
 
-```{r missingData echo = TRUE}
+```{r missingData, echo = TRUE}
 missingSteps <- length( data$steps[ is.na(data$steps) ] )
 ```
 
