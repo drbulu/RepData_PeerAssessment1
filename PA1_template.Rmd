@@ -3,9 +3,44 @@
 
 ## Loading and preprocessing the data
 
+```{r echo = TRUE}
+data <- read.csv("activity.csv", header=T)
+```
 
+data subset without NA values (may not need it due to the above)
+
+```{r echo = TRUE}
+subsetData <- subset(data, !is.na(data$steps)) ; head(subsetData)
+```
 
 ## What is mean total number of steps taken per day?
+
+get the mean of the data
+```{r summary.ststs,echo=TRUE}
+summary.stats <- ddply(data, .(date), summarize,
+                sum.steps = sum(steps, na.rm = T),
+                mean.steps = mean(steps, na.rm = T),
+                median.steps = median(steps, na.rm = T)
+            )
+```
+Histogram:
+```{r getMeanAndMedian, echo = TRUE}
+
+hist(summary.stats$sum.steps, 
+     main="Histogram of number of steps per day",
+     xlab="Number of steps in a day",
+     ylab="Frequency (number of days)")
+
+meanSteps <- mean(subsetData$steps)
+medianSteps <- median(subsetData$steps)
+
+```
+
+The _mean_ number of steps is: **`r meanSteps`**.
+The _median_ number of steps is: **`r medianSteps`**.
+
+**Note: the section above needs to be repeated**
+
 
 
 
@@ -15,6 +50,22 @@
 
 ## Imputing missing values
 
+```{r missingData echo = TRUE}
+missingSteps <- length( data$steps[ is.na(data$steps) ] )
+```
 
+The total number of missing values is: **`r missingSteps`**.
+
+It is assumed that missing values represent periods of inactivity where 
+
+```{r dataimputation, echo=TRUE} 
+    dataImputed <- data
+    dataImputed$st <- gsub()
+```
 
 ## Are there differences in activity patterns between weekdays and weekends?
+
+```{r echo = TRUE}
+
+
+```
