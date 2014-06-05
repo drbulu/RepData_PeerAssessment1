@@ -25,6 +25,7 @@ summary.stats <- ddply(data, .(date), summarize,
 
 ## What is mean total number of steps taken per day?
 
+<explain how you made the histogram>
 
 Histogram of the total number of steps measured per day:
 ```{r getMeanAndMedian, echo = TRUE}
