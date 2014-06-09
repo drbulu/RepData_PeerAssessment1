@@ -12,9 +12,12 @@ data <- read.csv("activity.csv", header = T)
 
 
 
-Summarise the data by the sum, mean and median of the number of steps measured on each day: 
 
-I may want to set ***cache=TRUE*** or cache.vars=TRUE at some stage
+## What is mean total number of steps taken per day?
+
+<explain how you made the histogram>
+
+Summarise the data by the sum, mean and median of the number of steps measured on each day: 
 
 
 ```r
@@ -25,9 +28,6 @@ dailySummaryStats <- ddply(data, .(date), summarize, sum.steps = sum(steps,
 ```
 
 
-## What is mean total number of steps taken per day?
-
-<explain how you made the histogram>
 
 Histogram of the total number of steps measured per day:
 
@@ -46,7 +46,7 @@ medianSteps <- median(dailySummaryStats$sum.steps)
 ```
 
 
-The _mean_ number of steps is: **9354.2295**.
+The _mean_ number of steps is: **9354.2295**.  
 The _median_ number of steps is: **10395**.
 
 
@@ -71,7 +71,8 @@ intervalSummaryStats <- ddply(data, .(interval), summarize, sum.steps = sum(step
     na.rm = T), mean.interval.steps = mean(steps, na.rm = T))
 
 plot(intervalSummaryStats$interval, intervalSummaryStats$mean.interval.steps, 
-    type = "l")
+    type = "l", main = "Plot of Daily Average Activity pattern", xlab = "Daily interval", 
+    ylab = "Average number of steps per interval")
 ```
 
 ![plot of chunk plotAvgDailyActivityPattern](figure/plotAvgDailyActivityPattern.png) 
@@ -114,17 +115,27 @@ Side note: Alternatively, I could take the mean of the "steps" column in the raw
 
 
 ```r
-# 'copy' the source data frame called 'data' into one called 'imputedData'
-imputedData <- data
-# find all NA values in imputedData and replace them with 0
+# Create a variable called imputedSteps from the steps column of the 'data'
+# data frame
+imputedSteps <- data$steps
 
-# (33, representing a low activity day) ==> generated from running summary()
-# this is the value from calling summary() on the original data set. i.e.
-# summary(data)
+# replace the NA values from imputedSteps with the desired value to use for
+# imputation imputation value = 33 representing a low activity day)
+# generated from calling summary() on the 'data' object. i.e. summary(data).
 
-imputedData[is.na(imputedData)] <- 33
+imputedSteps[is.na(imputedSteps)] <- 33
 
-# make a summary of the data via the method used earlier
+# make a new data frame called imputedData: from imputedSteps variable and
+# the 'date' and 'interval' columns of 'data' using data.frame() to ensure
+# that R makes a data frame and NOT a matrix
+imputedData <- data.frame(imputedSteps, data$date, data$interval)
+
+# rename the column names of 'imputedData' data frame to match those of
+# 'data'
+names(imputedData) <- names(data)
+
+# make a summary of the data via the method used earlier. This time we split
+# the data by the
 library(plyr)
 imputedDailySummaryStats <- ddply(imputedData, .(date), summarize, sum.steps = sum(steps, 
     na.rm = T), mean.interval.steps = mean(steps, na.rm = T))
@@ -170,6 +181,27 @@ the dataset with the filled-in missing values for this part.
 
 
 
+```r
+
+# helpful start: http://www.statmethods.net/management/variables.html
+
+# use this strategy to create / add a new numeric column according to
+# whether the day in data is a weekday or not
+
+day.type <- ifelse(weekdays(as.Date(imputedData$date)) == "Saturday" | weekdays(as.Date(imputedData$date)) == 
+    "Saturday", c(2), c(1))
+
+# bind this factor to the data frame
+inputFactorData <- data.frame(imputedData, day.type)
+
+# Make the 'day.type' column a factor
+inputFactorData$day.type <- factor(inputFactorData$day.type)
+
+# set the levels (categories) of the weekday
+levels(inputFactorData$day.type) <- c("weekday", "weekend")
+
+# now we are all set
+```
 
 
 not sure yet?
