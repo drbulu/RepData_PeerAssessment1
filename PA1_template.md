@@ -3,7 +3,7 @@
 
 ## Loading and preprocessing the data
 
-Load the data into R. Making sure that the **header=T** option is specified to make sure that the column headings are imported properly, meaning that the structure of the entire imported dataset is intact.  
+Load the data into R. Be careful to make sure that the **header=T** option is specified to make sure that the column headings are imported properly. This ensures that the structure of the entire imported dataset is intact.  
 
 The data transformations required for each step of the analysis will be performed when needed.  
 
@@ -16,7 +16,9 @@ data <- read.csv("activity.csv", header = T)
 
 ## What is mean total number of steps taken per day?
 
-The first step to creating the histogram is to summarise the data to represent the total number of steps measured per day. As opposed to the original data, which represents the total number of steps measured during each interval of each day.  
+The first step to create the histogram is to summarise the data to represent the **total number** of steps **measured per day**.  
+
+This is different from the original data, which represents the number _(subtotal)_ of steps measured during ***each interval*** of each day.  
 
 The summary is created as follows:
 
@@ -64,8 +66,8 @@ intervalSummaryStats <- ddply(data, .(interval), summarize, sum.steps = sum(step
     na.rm = T), mean.interval.steps = mean(steps, na.rm = T))
 
 plot(intervalSummaryStats$interval, intervalSummaryStats$mean.interval.steps, 
-    type = "l", main = "Plot of Daily Average Activity pattern", xlab = "Daily interval", 
-    ylab = "Average number of steps per interval")
+    type = "l", main = "Plot of Daily Average Activity pattern", xlab = "interval", 
+    ylab = "Number of steps (average)")
 ```
 
 ![plot of chunk plotAvgDailyActivityPattern](figure/plotAvgDailyActivityPattern.png) 
@@ -155,9 +157,7 @@ Once we have created the imputed data set (in a way that does not overwrite the 
 
 
 ```r
-# make a summary of the data via the method used earlier. This time we split
-# the data by the
-library(plyr)
+# make a summary of the imputed data via the method used earlier.
 imputedDailySummaryStats <- ddply(imputedData, .(date), summarize, sum.steps = sum(steps, 
     na.rm = T), mean.interval.steps = mean(steps, na.rm = T))
 
@@ -188,8 +188,6 @@ Comparatively:
 2. The imputed values are **1.0251** higher than the previously calculated median.  
 
 ## Are there differences in activity patterns between weekdays and weekends?
-
-**<span style="color:red" >This makes sense to compare with the original unimputed data !!<span>**
 
 Create the updated data set with the day.type factor variable to indicate whether a given day in the dataset is a **weekday** or a **weekend** day:
 
@@ -230,14 +228,15 @@ library(lattice)
 
 # Create the plot so that it matches the format of the example in README.md
 xyplot(mean.interval.steps ~ interval | day.type, data = factorSummaryStats, 
-    type = "l", group = day.type, layout = c(1, 2))
+    type = "l", group = day.type, layout = c(1, 2), main = "Plot of Daily Average Activity pattern: Weekend vs. Weekday", 
+    xlab = "interval", ylab = "Number of steps (average)")
 ```
 
 ![plot of chunk dayTypeTimeSeries](figure/dayTypeTimeSeries.png) 
 
 ```r
 
-# Note: this is a very useful resource for constructing lattice plots#
+# Note: this is a very useful resource for constructing lattice plots
 # https://www.stat.auckland.ac.nz/~paul/RGraphics/chapter4.pdf Chapter 4.4
 # is where I got the hint about using the layout parameter to control plot
 # layout.
