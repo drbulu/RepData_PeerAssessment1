@@ -239,6 +239,7 @@ xyplot(mean.interval.steps ~ interval | day.type, data = factorSummaryStats,
 # Note: this is a very useful resource for constructing lattice plots
 # https://www.stat.auckland.ac.nz/~paul/RGraphics/chapter4.pdf Chapter 4.4
 # is where I got the hint about using the layout parameter to control plot
-# layout.
+# layout.  another useful resource:
+# http://lmdvr.r-forge.r-project.org/figures/figures.html
 ```
 
